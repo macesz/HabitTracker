@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
 
     private HabitDBHelper mDbHelper;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,20 +35,7 @@ public class MainActivity extends AppCompatActivity {
         mDbHelper.insertSport(this, values);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        displayDatabaseInfo();
-    }
-
-    private void displayDatabaseInfo() {
-        // To access our database, we instantiate our subclass of SQLiteOpenHelper
-        // and pass the context, which is the current activity.
-//        PetDbHelper mDbHelper = new PetDbHelper(this);
-
-        // Create and/or open a database to read from it
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
-
+    private Cursor readData(SQLiteDatabase db){
         String[] projection = {
                 HabitContract.HabitEntry._ID,
                 HabitContract.HabitEntry.COLUMN_SPORT_TYPE,
@@ -58,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 HabitContract.HabitEntry.COLUMN_SPORT_CALORI
         };
 
-        Cursor cursor = db.query(
+        return db.query(
                 HabitContract.HabitEntry.TABLE_NAME,
                 projection,
                 null,
@@ -66,9 +52,23 @@ public class MainActivity extends AppCompatActivity {
                 null,
                 null,
                 null);
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor cursor = readData(db);
+
+        displayDatabaseInfo(cursor);
+    }
+
+
+    private void displayDatabaseInfo(Cursor cursor) {
 
         TextView displayView = (TextView) findViewById(R.id.text_view_habit);
-
 
         try {
             // Create a header in the Text View that looks like this:

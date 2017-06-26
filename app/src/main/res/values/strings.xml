@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Habit Tracker</string>
+    <string name="SAVE_ERROR">Error with saving sport in the gym table</string>
+    <string name="SAVE_SUCESS">Sport saved with row id:</string>
 </resources>

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.android.habittracker.Data.HabitContract.HabitEntry;
+import com.example.android.habittracker.R;
 
 import static com.example.android.habittracker.Data.HabitContract.HabitEntry.COLUMN_SPORT_CALORI;
 import static com.example.android.habittracker.Data.HabitContract.HabitEntry.COLUMN_SPORT_DATE;
@@ -58,8 +59,11 @@ public class HabitDBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+        String SQL_DROP_TABLE = "DROP TABLE " + HabitContract.HabitEntry.TABLE_NAME + ";";
+        db.execSQL(SQL_DROP_TABLE);
 
+        onCreate(db);
     }
 
     public void insertSport(Context context, ContentValues values) {
@@ -83,10 +87,14 @@ public class HabitDBHelper extends SQLiteOpenHelper {
         // Show a toast message depending on whether or not the insertion was successful
         if (newRowId == -1) {
             // If the row ID is -1, then there was an error with insertion.
-            Toast.makeText(context, "Error with saving sport in the gym table", Toast.LENGTH_LONG).show();
+            displayToast(context, context.getString(R.string.SAVE_ERROR));
         } else {
             // Otherwise, the insertion was successful and we can display a toast with the row ID.
-            Toast.makeText(context, "Sport saved with row id: " + newRowId, Toast.LENGTH_LONG).show();
+            displayToast(context, context.getString(R.string.SAVE_SUCESS) + newRowId);
         }
+    }
+
+    private void displayToast(Context context, String message){
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 }
